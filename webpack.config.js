@@ -13,14 +13,15 @@ const webpackPlugins = [
   //   path: './.env',
   //   systemvars: true,
   // }),
-  new CopyPlugin({
-    patterns: [
-      { from: './src/favicon.ico', to: '' },
-      { from: './src/manifest.json', to: '' },
-      { from: './src/logo192.png', to: '' },
-      { from: './src/logo512.png', to: '' },
-    ],
-  }),
+
+  // new CopyPlugin({
+  //   patterns: [
+  //     { from: './src/favicon.ico', to: '' },
+  //     { from: './src/manifest.json', to: '' },
+  //     { from: './src/logo192.png', to: '' },
+  //     { from: './src/logo512.png', to: '' },
+  //   ],
+  // }),
 ];
 
 if ('production' === process.env.NODE_ENV) {
