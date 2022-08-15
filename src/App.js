@@ -1,14 +1,11 @@
-import React from "react"
-import db from "./db"
-import { useLiveQuery } from "dexie-react-hooks"
-import Inputs from "./components/Inputs"
-import TaskItem from "./components/TaskItem"
-
+import React from "react";
+import db from "./db";
+import { useLiveQuery } from "dexie-react-hooks";
+import Inputs from "./components/Inputs";
+import TaskItem from "./components/TaskItem";
 
 const App = () => {
-  const tasks = useLiveQuery(
-    () => db.tasks.orderBy("_createdAt").toArray()
-  )
+  const tasks = useLiveQuery(() => db.tasks.orderBy("_createdAt").toArray());
 
   return (
     <div>
@@ -16,12 +13,12 @@ const App = () => {
       <ul style={{ listStyle: "none" }}>
         {tasks
           ? tasks.map((val, index) => {
-            return (<TaskItem task={val} key={val._id} />)
+            return <TaskItem task={val} key={val._id} />;
           })
           : null}
       </ul>
-    </div >
-  )
-}
+    </div>
+  );
+};
 
-export default App
+export default App;

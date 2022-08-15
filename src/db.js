@@ -1,20 +1,22 @@
 import Dexie from "dexie";
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from "uuid";
 import md5 from "md5";
 
-const db = new Dexie('t-tree-db')
+const db = new Dexie("t-tree-db");
 
 db.version(2).stores({
-  tasks: '_id, title, done, _hash, _rev, _deleted'
-})
+  tasks: "_id, title, done, _hash, _rev, _deleted",
+});
 
-db.version(3).stores({
-  tasks: '_id, title, done, _hash, _rev, _deleted, _createdAt, _updatedAt'
-}).upgrade((trans) => {
-  return trans.tasks.toCollection().modify({ _createdAt: 0, _updatedAt: 0 })
-})
+db.version(3)
+  .stores({
+    tasks: "_id, title, done, _hash, _rev, _deleted, _createdAt, _updatedAt",
+  })
+  .upgrade((trans) => {
+    return trans.tasks.toCollection().modify({ _createdAt: 0, _updatedAt: 0 });
+  });
 
-export default db
+export default db;
 
 export const create = (title) => {
   const content = {
@@ -24,43 +26,43 @@ export const create = (title) => {
     title: title,
     done: false,
     _createdAt: Date.now(),
-    _updatedAt: Date.now()
-  }
+    _updatedAt: Date.now(),
+  };
 
-  const hash = { _hash: md5(JSON.stringify(content)) }
+  const hash = { _hash: md5(JSON.stringify(content)) };
 
-  Object.assign(content, hash)
+  Object.assign(content, hash);
 
-  db.tasks.add(content)
-}
+  db.tasks.add(content);
+};
 
 export const update = (updatedTask) => {
-  const content = updatedTask
+  const content = updatedTask;
 
-  delete content._hash
-  content._rev++
-  content._updatedAt = Date.now()
+  delete content._hash;
+  content._rev++;
+  content._updatedAt = Date.now();
 
-  const hash = { _hash: md5(JSON.stringify(content)) }
+  const hash = { _hash: md5(JSON.stringify(content)) };
 
-  Object.assign(content, hash)
+  Object.assign(content, hash);
 
-  db.tasks.update(content._id, content)
-}
+  db.tasks.update(content._id, content);
+};
 
 export const del = (task) => {
   if (task._deleted) return;
 
-  const content = task
+  const content = task;
 
-  delete content._hash
-  content._rev++
-  content._updatedAt = Date.now()
-  task._deleted = true
+  delete content._hash;
+  content._rev++;
+  content._updatedAt = Date.now();
+  task._deleted = true;
 
-  const hash = { _hash: md5(JSON.stringify(content)) }
+  const hash = { _hash: md5(JSON.stringify(content)) };
 
-  Object.assign(content, hash)
+  Object.assign(content, hash);
 
-  db.tasks.update(content._id, content)
-}
+  db.tasks.update(content._id, content);
+};

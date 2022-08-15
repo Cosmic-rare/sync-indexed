@@ -15,14 +15,14 @@ const Inputs = () => {
         value={data}
         onKeyDown={(e) => {
           if (e.keyCode === 13) {
-            create(data)
+            create(data);
             setData("");
           }
         }}
       />
       <button
         onClick={() => {
-          create(data)
+          create(data);
           setData("");
         }}
       >

@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { del, update } from '../db';
+import React, { useState } from "react";
+import { del, update } from "../db";
 
 const TaskItem = (props) => {
   const { task } = props;
-  const [editting, setEditing] = useState(false)
-  const [edittingTask, setEdittingTask] = useState(task)
+  const [editting, setEditing] = useState(false);
+  const [edittingTask, setEdittingTask] = useState(task);
 
   if (task._deleted) return;
   return (
@@ -23,7 +23,7 @@ const TaskItem = (props) => {
       </span>
       <span
         onClick={() => {
-          update({ ...task, done: !task.done })
+          update({ ...task, done: !task.done });
         }}
         style={{
           cursor: "pointer",
@@ -31,49 +31,45 @@ const TaskItem = (props) => {
       >
         {task && task.done ? "👌" : "👋"}{" "}
       </span>
-      {!editting ?
-        <span
-          style={
-            task.done ? { textDecoration: "line-through" } : {}
-          }
-        >
+      {!editting ? (
+        <span style={task.done ? { textDecoration: "line-through" } : {}}>
           {task.title}
         </span>
-        :
-        <div style={{ display: 'inline' }}>
+      ) : (
+        <div style={{ display: "inline" }}>
           <input
-            style={{ display: 'inline', width: 200 }}
+            style={{ display: "inline", width: 200 }}
             value={edittingTask.title}
             onChange={(e) => {
-              setEdittingTask({ ...edittingTask, title: e.target.value })
+              setEdittingTask({ ...edittingTask, title: e.target.value });
             }}
             onKeyDown={(e) => {
               if (e.keyCode === 13) {
-                update(edittingTask)
-                setEditing(false)
+                update(edittingTask);
+                setEditing(false);
               }
             }}
           />
           <button
-            style={{ display: 'inline' }}
+            style={{ display: "inline" }}
             onClick={() => {
-              setEditing(false)
-              setEdittingTask(task)
+              setEditing(false);
+              setEdittingTask(task);
             }}
           >
             Cancel
           </button>
           <button
-            style={{ display: 'inline' }}
+            style={{ display: "inline" }}
             onClick={() => {
-              update(edittingTask)
-              setEditing(false)
+              update(edittingTask);
+              setEditing(false);
             }}
           >
             Save
           </button>
         </div>
-      }
+      )}
     </li>
   );
 };
