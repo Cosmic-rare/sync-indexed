@@ -4,7 +4,7 @@ import md5 from "md5";
 
 const db = new Dexie('t-tree-db')
 
-db.version(3).stores({
+db.version(2).stores({
   tasks: '_id, title, done, _hash, _rev, _deleted'
 })
 
