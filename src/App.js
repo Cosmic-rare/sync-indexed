@@ -7,7 +7,7 @@ import TaskItem from "./components/TaskItem"
 
 const App = () => {
   const tasks = useLiveQuery(
-    () => db.tasks.toArray()
+    () => db.tasks.orderBy("_createdAt").toArray()
   )
 
   return (
