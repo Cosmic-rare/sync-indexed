@@ -1,7 +1,27 @@
 import React from "react"
+import db from "./db"
+import { useLiveQuery } from "dexie-react-hooks"
+import Inputs from "./components/Inputs"
+import TaskItem from "./components/TaskItem"
+
 
 const App = () => {
-  return <h1>Hello!!!!!!</h1>
+  const tasks = useLiveQuery(
+    () => db.tasks.toArray()
+  )
+
+  return (
+    <div>
+      <Inputs />
+      <ul style={{ listStyle: "none" }}>
+        {tasks
+          ? tasks.map((val, index) => {
+            return (<TaskItem task={val} key={val._id} />)
+          })
+          : null}
+      </ul>
+    </div >
+  )
 }
 
 export default App
