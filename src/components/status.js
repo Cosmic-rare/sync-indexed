@@ -2,17 +2,20 @@ import React from "react";
 import useSync from "../hooks/useSync";
 
 const Status = () => {
-  const syncStatus = useSync();
+  const { network, synced, syncing } = useSync();
 
   return (
-    <p
+    <div
       style={{
         marginTop: 15,
         marginLeft: 40,
       }}
     >
-      {syncStatus}
-    </p>
+      <p>NetWork: {network ? "Online" : "Offline"}</p>
+      <p>
+        Sync: {synced ? "Synced" : "Not Synced"} {syncing ? "Syncing" : ""}
+      </p>
+    </div>
   );
 };
 
