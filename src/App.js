@@ -20,6 +20,7 @@ const App = () => {
   const [, connected, reconnection] = useSocket();
   const syncTable = useLiveQuery(() => db.sync.toArray());
   const { network } = useSync();
+  const syncCount = useLiveQuery(() => db.sync.count());
 
   useEffect(() => {
     if (syncTable && network) {
@@ -41,7 +42,11 @@ const App = () => {
     <div>
       <Inputs />
       <Order order={order} setOrder={setOrder} />
-      <Status connected={connected} reconnection={reconnection} />
+      <Status
+        connected={connected}
+        reconnection={reconnection}
+        syncCount={syncCount}
+      />
       <ul style={{ listStyle: "none" }}>
         {tasks
           ? tasks.map((val) => {
