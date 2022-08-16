@@ -15,13 +15,13 @@ const App = () => {
     );
     return order.slice(-1) === "-" ? task.reverse().toArray() : task.toArray();
   }, [order]);
-  const [socket, connected] = useSocket();
+  const [socket, connected, reconnection] = useSocket();
 
   return (
     <div>
       <Inputs />
       <Order order={order} setOrder={setOrder} />
-      <Status connected={connected} />
+      <Status connected={connected} reconnection={reconnection} />
       <ul style={{ listStyle: "none" }}>
         {tasks
           ? tasks.map((val, index) => {

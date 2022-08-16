@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import useSync from "../hooks/useSync";
 
 const Status = (props) => {
-  const { connected } = props;
+  const { connected, reconnection } = props;
   const { network, synced, syncing } = useSync();
 
   return (
@@ -17,6 +17,7 @@ const Status = (props) => {
         Sync: {synced ? "Synced" : "Not Synced"} {syncing ? "Syncing" : ""}
       </p>
       <p>Connect: {connected ? "Connected" : "Disconnected"}</p>
+      <p>Reconnection: {reconnection ? "enable(true)" : "disable(false)"}</p>
     </div>
   );
 };
