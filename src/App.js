@@ -6,7 +6,7 @@ import TaskItem from "./components/TaskItem";
 import Order from "./components/Order";
 import Status from "./components/status";
 import useSocket from "./hooks/useSocket";
-import axios from "axios";
+import { sync } from "./db/sync";
 import useNetwork from "./hooks/useNetwork";
 import ForceSync from "./components/ForceSync";
 
@@ -23,24 +23,8 @@ const App = () => {
   const network = useNetwork();
   const syncCount = useLiveQuery(() => db.sync.count());
 
-  const sync = () => {
-    if (syncTable && network) {
-      if (syncTable.length !== 0) {
-        syncTable.map((val) => {
-          axios
-            .post("http://localhost:4000", {
-              commands: [{ type: val.type, data: val }],
-            })
-            .then(() => {
-              db.sync.delete(val.id);
-            });
-        });
-      }
-    }
-  };
-
   useEffect(() => {
-    sync();
+    sync(syncTable, network);
   }, [syncTable, network]);
 
   return (
@@ -52,7 +36,7 @@ const App = () => {
         reconnection={reconnection}
         syncCount={syncCount}
       />
-      <ForceSync onClick={sync} />
+      <ForceSync onClick={() => sync(syncTable, network)} />
       <ul style={{ listStyle: "none" }}>
         {tasks
           ? tasks.map((val) => {
