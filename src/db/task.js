@@ -1,6 +1,7 @@
 import db from "./db";
 import { v4 as uuidv4 } from "uuid";
 import md5 from "md5";
+import { syncAdd, syncUpdate } from "./sync";
 
 export const create = (title) => {
   const content = {
@@ -18,6 +19,7 @@ export const create = (title) => {
   Object.assign(content, hash);
 
   db.tasks.add(content);
+  syncAdd(content);
 };
 
 export const update = (updatedTask) => {
@@ -32,6 +34,7 @@ export const update = (updatedTask) => {
   Object.assign(content, hash);
 
   db.tasks.update(content._id, content);
+  syncUpdate(content);
 };
 
 export const del = (task) => {
@@ -49,4 +52,5 @@ export const del = (task) => {
   Object.assign(content, hash);
 
   db.tasks.update(content._id, content);
+  syncUpdate(content);
 };
