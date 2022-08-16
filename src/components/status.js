@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useSync from "../hooks/useSync";
 
-const Status = () => {
+const Status = (props) => {
+  const { connected } = props;
   const { network, synced, syncing } = useSync();
 
   return (
@@ -15,6 +16,7 @@ const Status = () => {
       <p>
         Sync: {synced ? "Synced" : "Not Synced"} {syncing ? "Syncing" : ""}
       </p>
+      <p>Connect: {connected ? "Connected" : "Disconnected"}</p>
     </div>
   );
 };
