@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import db from "./db/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import Inputs from "./components/Inputs";
@@ -22,10 +22,6 @@ const App = () => {
   const syncTable = useLiveQuery(() => db.sync.toArray());
   const network = useNetwork();
   const syncCount = useLiveQuery(() => db.sync.count());
-
-  useEffect(() => {
-    sync(syncTable, network);
-  }, [syncTable, network]);
 
   return (
     <div>
