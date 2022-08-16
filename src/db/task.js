@@ -1,22 +1,6 @@
-import Dexie from "dexie";
+import db from "./db";
 import { v4 as uuidv4 } from "uuid";
 import md5 from "md5";
-
-const db = new Dexie("t-tree-db");
-
-db.version(2).stores({
-  tasks: "_id, title, done, _hash, _rev, _deleted",
-});
-
-db.version(3)
-  .stores({
-    tasks: "_id, title, done, _hash, _rev, _deleted, _createdAt, _updatedAt",
-  })
-  .upgrade((trans) => {
-    return trans.tasks.toCollection().modify({ _createdAt: 0, _updatedAt: 0 });
-  });
-
-export default db;
 
 export const create = (title) => {
   const content = {

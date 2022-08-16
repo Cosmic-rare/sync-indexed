@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { del, update } from "../db";
+import { del, update } from "../db/task";
 
 const TaskItem = (props) => {
   const { task } = props;

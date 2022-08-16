@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { create } from "../db";
+import { create } from "../db/task";
 
 const Inputs = () => {
   const [data, setData] = useState("");
