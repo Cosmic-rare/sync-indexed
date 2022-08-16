@@ -4,6 +4,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import Inputs from "./components/Inputs";
 import TaskItem from "./components/TaskItem";
 import Order from "./components/Order";
+import Status from "./components/status";
 
 const App = () => {
   const [order, setOrder] = useState("create+");
@@ -18,6 +19,7 @@ const App = () => {
     <div>
       <Inputs />
       <Order order={order} setOrder={setOrder} />
+      <Status />
       <ul style={{ listStyle: "none" }}>
         {tasks
           ? tasks.map((val, index) => {
