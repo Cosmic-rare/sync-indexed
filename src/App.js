@@ -8,6 +8,7 @@ import Status from "./components/status";
 import useSocket from "./hooks/useSocket";
 import axios from "axios";
 import useSync from "./hooks/useSync";
+import ForceSync from "./components/ForceSync";
 
 const App = () => {
   const [order, setOrder] = useState("create+");
@@ -22,7 +23,7 @@ const App = () => {
   const { network } = useSync();
   const syncCount = useLiveQuery(() => db.sync.count());
 
-  useEffect(() => {
+  const sync = () => {
     if (syncTable && network) {
       if (syncTable.length !== 0) {
         syncTable.map((val) => {
@@ -36,6 +37,10 @@ const App = () => {
         });
       }
     }
+  };
+
+  useEffect(() => {
+    sync();
   }, [syncTable, network]);
 
   return (
@@ -47,6 +52,7 @@ const App = () => {
         reconnection={reconnection}
         syncCount={syncCount}
       />
+      <ForceSync onClick={sync} />
       <ul style={{ listStyle: "none" }}>
         {tasks
           ? tasks.map((val) => {
