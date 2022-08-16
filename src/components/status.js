@@ -18,6 +18,7 @@ const Status = (props) => {
       </p>
       <p>Connect: {connected ? "Connected" : "Disconnected"}</p>
       <p>Reconnection: {reconnection ? "enable(true)" : "disable(false)"}</p>
+      <p>ENV(AA): {process.env.AA}</p>
     </div>
   );
 };

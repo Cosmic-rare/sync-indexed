@@ -1,18 +1,20 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
-const Dotenv = require("dotenv-webpack");
+const webpack = require("webpack");
 const { InjectManifest } = require("workbox-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const environment = process.env.NODE_ENV;
+
+const environmentConfig = require(`./src/config/${environment}.js`);
 
 const webpackPlugins = [
   new HtmlWebpackPlugin({
     template: path.resolve(__dirname, "public/index.html"),
     filename: "index.html",
   }),
-  // new Dotenv({
-  //   path: './.env',
-  //   systemvars: true,
-  // }),
+  new webpack.DefinePlugin({
+    "process.env": JSON.stringify(environmentConfig),
+  }),
   new CopyPlugin({
     patterns: [
       { from: "./public/favicon.ico", to: "" },
