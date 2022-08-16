@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import useSync from "../hooks/useSync";
 
 const Status = (props) => {

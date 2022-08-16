@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import db from "./db/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import Inputs from "./components/Inputs";
@@ -15,7 +15,7 @@ const App = () => {
     );
     return order.slice(-1) === "-" ? task.reverse().toArray() : task.toArray();
   }, [order]);
-  const [socket, connected, reconnection] = useSocket();
+  const [, connected, reconnection] = useSocket();
 
   return (
     <div>
@@ -24,7 +24,7 @@ const App = () => {
       <Status connected={connected} reconnection={reconnection} />
       <ul style={{ listStyle: "none" }}>
         {tasks
-          ? tasks.map((val, index) => {
+          ? tasks.map((val) => {
               return <TaskItem task={val} key={val._id} />;
             })
           : null}
