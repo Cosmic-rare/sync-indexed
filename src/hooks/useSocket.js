@@ -6,7 +6,7 @@ const useSocket = () => {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    socketRef.current = io("localhost:4000", {
+    socketRef.current = io("ws://localhost:4000", {
       reconnection: true,
       reconnectionDelay: 10,
     });
