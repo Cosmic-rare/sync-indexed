@@ -1,9 +1,11 @@
 import React from "react";
 import useSync from "../hooks/useSync";
+import useNetwork from "../hooks/useNetwork";
 
 const Status = (props) => {
   const { connected, reconnection, syncCount } = props;
-  const { network, synced, syncing } = useSync();
+  const { synced, syncing } = useSync();
+  const network = useNetwork();
 
   return (
     <div

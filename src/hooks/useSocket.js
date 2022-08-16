@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Manager } from "socket.io-client";
-import useSync from "./useSync";
+import useNetwork from "./useNetwork";
 
 const useSocket = () => {
   const managerRef = useRef(null);
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
   const [reconnection, setReconnection] = useState(false);
-  const { network } = useSync();
+  const network = useNetwork();
 
   useEffect(() => {
     managerRef.current = new Manager("ws://localhost:4000", {

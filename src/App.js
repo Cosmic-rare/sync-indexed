@@ -7,7 +7,7 @@ import Order from "./components/Order";
 import Status from "./components/status";
 import useSocket from "./hooks/useSocket";
 import axios from "axios";
-import useSync from "./hooks/useSync";
+import useNetwork from "./hooks/useNetwork";
 import ForceSync from "./components/ForceSync";
 
 const App = () => {
@@ -20,7 +20,7 @@ const App = () => {
   }, [order]);
   const [, connected, reconnection] = useSocket();
   const syncTable = useLiveQuery(() => db.sync.toArray());
-  const { network } = useSync();
+  const network = useNetwork();
   const syncCount = useLiveQuery(() => db.sync.count());
 
   const sync = () => {
