@@ -11,6 +11,7 @@ const Inputs = () => {
           marginTop: 15,
           marginLeft: 40,
         }}
+        placeholder="task-title"
         onChange={(e) => setData(e.target.value)}
         value={data}
         onKeyDown={(e) => {
