@@ -24,9 +24,10 @@ export const create = (title) => {
 
 export const update = (updatedTask) => {
   const content = updatedTask;
-
+  console.log(content._rev);
   delete content._hash;
   content._rev++;
+  console.log(content._rev);
   content._updatedAt = Date.now();
 
   const hash = { _hash: md5(JSON.stringify(content)) };
