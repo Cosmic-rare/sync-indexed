@@ -22,35 +22,28 @@ export const create = (title) => {
   syncAdd(content);
 };
 
-export const update = (updatedTask) => {
-  const content = updatedTask;
-  console.log(content._rev);
-  delete content._hash;
+export const update = async (updatedTask) => {
+  const content = await db.tasks.get(updatedTask._id);
+
+  content.title = updatedTask.title;
+  content.done = updatedTask.done;
   content._rev++;
-  console.log(content._rev);
   content._updatedAt = Date.now();
+  content._hash = md5(JSON.stringify(content));
 
-  const hash = { _hash: md5(JSON.stringify(content)) };
-
-  Object.assign(content, hash);
-
-  db.tasks.update(content._id, content);
+  await db.tasks.update(content._id, content);
   syncUpdate(content);
 };
 
-export const del = (task) => {
+export const del = async (task) => {
   if (task._deleted) return;
 
-  const content = task;
+  const content = await db.tasks.get(task._id);
 
-  delete content._hash;
+  content._deleted = true;
   content._rev++;
   content._updatedAt = Date.now();
-  task._deleted = true;
-
-  const hash = { _hash: md5(JSON.stringify(content)) };
-
-  Object.assign(content, hash);
+  content._hash = md5(JSON.stringify(content));
 
   db.tasks.update(content._id, content);
   syncUpdate(content);
