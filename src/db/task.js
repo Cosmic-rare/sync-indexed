@@ -4,22 +4,24 @@ import md5 from "md5";
 import { syncAdd, syncUpdate } from "./sync";
 
 export const create = (title) => {
-  const content = {
-    _id: uuidv4(),
-    _rev: 0,
-    _deleted: false,
-    title: title,
-    done: false,
-    _createdAt: Date.now(),
-    _updatedAt: Date.now(),
-  };
+  if (!(title.trim() === "")) {
+    const content = {
+      _id: uuidv4(),
+      _rev: 0,
+      _deleted: false,
+      title: title,
+      done: false,
+      _createdAt: Date.now(),
+      _updatedAt: Date.now(),
+    };
 
-  const hash = { _hash: md5(JSON.stringify(content)) };
+    const hash = { _hash: md5(JSON.stringify(content)) };
 
-  Object.assign(content, hash);
+    Object.assign(content, hash);
 
-  db.tasks.add(content);
-  syncAdd(content);
+    db.tasks.add(content);
+    syncAdd(content);
+  }
 };
 
 export const update = async (id, title) => {

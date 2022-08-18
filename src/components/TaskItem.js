@@ -8,7 +8,7 @@ const TaskItem = (props) => {
 
   useEffect(() => {
     setTitle(task.title);
-  }, task);
+  }, [task, editting]);
 
   if (task._deleted) return;
   return (
@@ -49,7 +49,9 @@ const TaskItem = (props) => {
             }}
             onKeyDown={(e) => {
               if (e.keyCode === 13) {
-                update(task._id, title);
+                if (!(title.trim() === "")) {
+                  update(task._id, title);
+                }
                 setEditing(false);
               }
             }}
@@ -66,7 +68,9 @@ const TaskItem = (props) => {
           <button
             style={{ display: "inline" }}
             onClick={() => {
-              update(task._id, title);
+              if (!(title.trim() === "")) {
+                update(task._id, title);
+              }
               setEditing(false);
             }}
           >
