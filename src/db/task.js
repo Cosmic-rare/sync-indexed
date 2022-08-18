@@ -62,6 +62,20 @@ export const del = async (task) => {
   syncUpdate(content);
 };
 
+export const restore = async (task) => {
+  if (!task._deleted) return;
+
+  const content = await db.tasks.get(task._id);
+
+  content._deleted = false;
+  content._rev++;
+  content._updatedAt = Date.now();
+  content._hash = md5(JSON.stringify(content));
+
+  db.tasks.update(content._id, content);
+  syncUpdate(content);
+};
+
 export const cleanTrash = async (task) => {
   if (!task._deleted) return;
 
