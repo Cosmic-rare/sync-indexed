@@ -1,7 +1,7 @@
 import db from "./db";
 import { v4 as uuidv4 } from "uuid";
 import md5 from "md5";
-import { syncAdd, syncUpdate } from "./sync";
+import { syncAdd, syncDelete, syncUpdate } from "./sync";
 
 export const create = (title) => {
   if (!(title.trim() === "")) {
@@ -60,4 +60,11 @@ export const del = async (task) => {
 
   db.tasks.update(content._id, content);
   syncUpdate(content);
+};
+
+export const cleanTrash = async (task) => {
+  if (!task._deleted) return;
+
+  db.tasks.delete(task._id);
+  syncDelete(task);
 };
