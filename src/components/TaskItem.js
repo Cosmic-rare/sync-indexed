@@ -1,10 +1,14 @@
-import React, { useState } from "react";
-import { del, update } from "../db/task";
+import React, { useEffect, useState } from "react";
+import { del, update, complete } from "../db/task";
 
 const TaskItem = (props) => {
   const { task } = props;
   const [editting, setEditing] = useState(false);
-  const [edittingTask, setEdittingTask] = useState(task);
+  const [title, setTitle] = useState(task.title);
+
+  useEffect(() => {
+    setTitle(task.title);
+  }, task);
 
   if (task._deleted) return;
   return (
@@ -23,7 +27,7 @@ const TaskItem = (props) => {
       </span>
       <span
         onClick={() => {
-          update({ ...task, done: !task.done });
+          complete(task._id);
         }}
         style={{
           cursor: "pointer",
@@ -39,13 +43,13 @@ const TaskItem = (props) => {
         <div style={{ display: "inline" }}>
           <input
             style={{ display: "inline", width: 200 }}
-            value={edittingTask.title}
+            value={title}
             onChange={(e) => {
-              setEdittingTask({ ...edittingTask, title: e.target.value });
+              setTitle(e.target.value);
             }}
             onKeyDown={(e) => {
               if (e.keyCode === 13) {
-                update(edittingTask);
+                update(task._id, title);
                 setEditing(false);
               }
             }}
@@ -54,7 +58,7 @@ const TaskItem = (props) => {
             style={{ display: "inline" }}
             onClick={() => {
               setEditing(false);
-              setEdittingTask(task);
+              setTitle(task.title);
             }}
           >
             Cancel
@@ -62,7 +66,7 @@ const TaskItem = (props) => {
           <button
             style={{ display: "inline" }}
             onClick={() => {
-              update(edittingTask);
+              update(task._id, title);
               setEditing(false);
             }}
           >

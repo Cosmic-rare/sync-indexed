@@ -22,11 +22,22 @@ export const create = (title) => {
   syncAdd(content);
 };
 
-export const update = async (updatedTask) => {
-  const content = await db.tasks.get(updatedTask._id);
+export const update = async (id, title) => {
+  const content = await db.tasks.get(id);
 
-  content.title = updatedTask.title;
-  content.done = updatedTask.done;
+  content.title = title;
+  content._rev++;
+  content._updatedAt = Date.now();
+  content._hash = md5(JSON.stringify(content));
+
+  await db.tasks.update(content._id, content);
+  syncUpdate(content);
+};
+
+export const complete = async (id) => {
+  const content = await db.tasks.get(id);
+
+  content.done = !content.done;
   content._rev++;
   content._updatedAt = Date.now();
   content._hash = md5(JSON.stringify(content));
