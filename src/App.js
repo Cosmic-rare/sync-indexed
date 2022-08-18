@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import db from "./db/db";
 import { useLiveQuery } from "dexie-react-hooks";
+import db from "./db/db";
+import { sync } from "./db/sync";
+import useSocket from "./hooks/useSocket";
+import useNetwork from "./hooks/useNetwork";
 import Inputs from "./components/Inputs";
 import TaskItem from "./components/TaskItem";
 import Order from "./components/Order";
 import Status from "./components/status";
-import useSocket from "./hooks/useSocket";
-import { sync } from "./db/sync";
-import useNetwork from "./hooks/useNetwork";
 import ForceSync from "./components/ForceSync";
+import TrashItem from "./components/TrashItem";
+import CategoryTitle from "./components/CategoryTitle";
 
 const App = () => {
   const [order, setOrder] = useState("create+");
@@ -33,10 +35,21 @@ const App = () => {
         syncCount={syncCount}
       />
       <ForceSync onClick={() => sync(syncTable, network)} />
+
+      <CategoryTitle title="Tasks" />
       <ul style={{ listStyle: "none" }}>
         {tasks
           ? tasks.map((val) => {
               return <TaskItem task={val} key={val._id} />;
+            })
+          : null}
+      </ul>
+
+      <CategoryTitle title="Trash" />
+      <ul style={{ listStyle: "none" }}>
+        {tasks
+          ? tasks.map((val) => {
+              return <TrashItem task={val} key={val._id} />;
             })
           : null}
       </ul>
