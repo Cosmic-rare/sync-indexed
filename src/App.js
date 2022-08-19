@@ -21,7 +21,7 @@ const App = () => {
     return order.slice(-1) === "-" ? task.reverse().toArray() : task.toArray();
   }, [order]);
   const [, connected, reconnection] = useSocket();
-  const syncTable = useLiveQuery(() => db.sync.toArray());
+  const syncTable = useLiveQuery(() => db.sync.orderBy("_changedAt").toArray());
   const network = useNetwork();
   const syncCount = useLiveQuery(() => db.sync.count());
 
