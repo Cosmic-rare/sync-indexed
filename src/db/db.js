@@ -16,7 +16,7 @@ db.version(3)
 
 db.version(4).stores({
   tasks: "_id, title, done, _hash, _rev, _deleted, _createdAt, _updatedAt",
-  sync: "id, type, _id, title, done, _hash, _rev, _deleted, _createdAt, _updatedAt, _changedAt",
+  sync: "sync_id, type, _id, title, done, _hash, _rev, _deleted, _createdAt, _updatedAt, _changedAt",
 });
 
 export default db;
