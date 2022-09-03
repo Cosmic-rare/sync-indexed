@@ -3,6 +3,14 @@ import { v4 as uuidv4 } from "uuid";
 import md5 from "md5";
 import { syncAdd, syncDelete, syncUpdate } from "./sync";
 
+export const addTaskSocket = async (task) => {
+  db.tasks.put(task);
+};
+
+export const delTaskSocket = (id) => {
+  db.tasks.delete(id);
+};
+
 export const create = (title) => {
   if (!(title.trim() === "")) {
     const content = {

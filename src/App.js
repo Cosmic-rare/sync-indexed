@@ -20,7 +20,7 @@ const App = () => {
     );
     return order.slice(-1) === "-" ? task.reverse().toArray() : task.toArray();
   }, [order]);
-  const [, connected, reconnection] = useSocket();
+  const [, connected, reconnection, clientId] = useSocket();
   const syncTable = useLiveQuery(() => db.sync.orderBy("_changedAt").toArray());
   const network = useNetwork();
   const syncCount = useLiveQuery(() => db.sync.count());
@@ -33,8 +33,9 @@ const App = () => {
         connected={connected}
         reconnection={reconnection}
         syncCount={syncCount}
+        clientId={clientId}
       />
-      <ForceSync onClick={() => sync(syncTable, network)} />
+      <ForceSync onClick={() => sync(syncTable, network, clientId)} />
 
       <CategoryTitle title="Tasks" />
       <ul style={{ listStyle: "none" }}>

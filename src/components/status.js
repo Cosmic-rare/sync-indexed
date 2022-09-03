@@ -3,8 +3,8 @@ import useSync from "../hooks/useSync";
 import useNetwork from "../hooks/useNetwork";
 
 const Status = (props) => {
-  const { connected, reconnection, syncCount } = props;
-  const { synced, syncing } = useSync();
+  const { connected, reconnection, syncCount, clientId } = props;
+  const { synced, syncing } = useSync(clientId);
   const network = useNetwork();
 
   return (

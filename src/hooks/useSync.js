@@ -4,7 +4,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import useNetwork from "./useNetwork";
 import { sync } from "../db/sync";
 
-const useSync = () => {
+const useSync = (clientId) => {
   const [status, setStatus] = useState({
     synced: false,
     syncing: false,
@@ -18,7 +18,7 @@ const useSync = () => {
   }, [syncCount]);
 
   useEffect(() => {
-    sync(syncTable, network);
+    sync(syncTable, network, clientId);
   }, [syncTable, network]);
 
   return status;

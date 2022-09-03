@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Manager } from "socket.io-client";
+import db from "../db/db";
+import { addTaskSocket, delTaskSocket } from "../db/task";
 import useNetwork from "./useNetwork";
 
 const useSocket = () => {
@@ -7,6 +9,7 @@ const useSocket = () => {
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
   const [reconnection, setReconnection] = useState(false);
+  const [clientId, setClientId] = useState("");
   const network = useNetwork();
 
   useEffect(() => {
@@ -19,6 +22,7 @@ const useSocket = () => {
 
     socketRef.current.on("connect", () => {
       setConnected(true);
+      setClientId(socketRef.current.id);
     });
 
     socketRef.current.on("disconnect", () => {
@@ -27,6 +31,24 @@ const useSocket = () => {
 
     window.addEventListener("online", () => {
       socketRef.current.connect();
+    });
+
+    socketRef.current.on("CU_task", async (task, client_id) => {
+      const isAlready = await db.tasks
+        .where("_hash")
+        .equals(task._hash)
+        .toArray();
+      if (isAlready.length === 0 && clientId !== client_id) {
+        task._id = task._uid;
+        delete task._uid;
+        addTaskSocket(task);
+      }
+    });
+
+    socketRef.current.on("D_task", async (deleteId, client_id) => {
+      if (clientId !== client_id) {
+        delTaskSocket(deleteId);
+      }
     });
 
     return () => {
@@ -39,7 +61,7 @@ const useSocket = () => {
     setReconnection(managerRef.current.reconnection());
   }, [network]);
 
-  return [socketRef, connected, reconnection];
+  return [socketRef, connected, reconnection, clientId];
 };
 
 export default useSocket;
