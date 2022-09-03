@@ -13,7 +13,7 @@ const useSocket = () => {
   const network = useNetwork();
 
   useEffect(() => {
-    managerRef.current = new Manager("ws://localhost:4000", {
+    managerRef.current = new Manager(process.env.SOCKET_URI, {
       reconnection: navigator.onLine,
       reconnectionDelay: 10,
     });
