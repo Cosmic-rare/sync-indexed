@@ -30,7 +30,7 @@ export const sync = (syncTable, network, clientId) => {
   if (syncTable && network) {
     if (syncTable.length !== 0) {
       axios
-        .post("http://localhost:4000", {
+        .post(`${process.env.API_URI}`, {
           error_messages: false,
           datas: syncTable,
           clientId: clientId,

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { Manager } from "socket.io-client";
 import db from "../db/db";
@@ -20,9 +21,27 @@ const useSocket = () => {
 
     socketRef.current = managerRef.current.socket("/");
 
-    socketRef.current.on("connect", () => {
+    socketRef.current.on("connect", async () => {
       setConnected(true);
       setClientId(socketRef.current.id);
+      const lastUpdate = await db.tasks
+        .orderBy("_updatedAt")
+        .limit(1)
+        .reverse()
+        .toArray();
+      axios
+        .get(
+          `${process.env.API_URI}/get?lastUpdate=${
+            lastUpdate[0] ? lastUpdate[0]._updatedAt : 0
+          }`
+        )
+        .then((res) => {
+          res.data.CU.map((val) => {
+            val._id = val._uid;
+            delete val._uid;
+            addTaskSocket(val);
+          });
+        });
     });
 
     socketRef.current.on("disconnect", () => {
