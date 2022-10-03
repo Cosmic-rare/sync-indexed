@@ -1,16 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import db from "./db/db";
-import { sync } from "./db/sync";
 import useSocket from "./hooks/useSocket";
-import useNetwork from "./hooks/useNetwork";
 import Inputs from "./components/Inputs";
 import TaskItem from "./components/TaskItem";
 import Order from "./components/Order";
 import Status from "./components/status";
-import ForceSync from "./components/ForceSync";
 import TrashItem from "./components/TrashItem";
 import CategoryTitle from "./components/CategoryTitle";
+import axios from "axios";
 
 const App = () => {
   const [order, setOrder] = useState("create+");
@@ -20,10 +18,15 @@ const App = () => {
     );
     return order.slice(-1) === "-" ? task.reverse().toArray() : task.toArray();
   }, [order]);
-  const [, connected, reconnection, clientId] = useSocket();
-  const syncTable = useLiveQuery(() => db.sync.orderBy("_changedAt").toArray());
-  const network = useNetwork();
+  const [, connected, reconnection] = useSocket();
   const syncCount = useLiveQuery(() => db.sync.count());
+
+  useEffect(() => {
+    axios.get(`${process.env.API_URI}/pull`).then((res) => {
+      db.tasks.clear();
+      db.tasks.bulkPut(res.data.tasks);
+    });
+  }, []);
 
   return (
     <div>
@@ -33,9 +36,7 @@ const App = () => {
         connected={connected}
         reconnection={reconnection}
         syncCount={syncCount}
-        clientId={clientId}
       />
-      <ForceSync onClick={() => sync(syncTable, network, clientId)} />
 
       <CategoryTitle title="Tasks" />
       <ul style={{ listStyle: "none" }}>

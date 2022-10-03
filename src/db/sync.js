@@ -1,5 +1,4 @@
 import db from "./db";
-import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
 export const syncAdd = (content) => {
@@ -24,25 +23,4 @@ export const syncDelete = (content) => {
     sync_id: uuidv4(),
   });
   db.sync.add(content);
-};
-
-export const sync = (syncTable, network, clientId) => {
-  if (syncTable && network) {
-    if (syncTable.length !== 0) {
-      axios
-        .post(`${process.env.API_URI}`, {
-          error_messages: false,
-          datas: syncTable,
-          clientId: clientId,
-        })
-        .then((res) => {
-          res.data.sucsess.map((val) => {
-            db.sync.delete(val);
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }
 };
