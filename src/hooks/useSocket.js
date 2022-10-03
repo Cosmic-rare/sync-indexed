@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Manager } from "socket.io-client";
 import db from "../db/db";
-import { addTaskSocket, delTaskSocket } from "../db/task";
+import { delTaskSocket } from "../db/task";
 import useNetwork from "./useNetwork";
 
 const useSocket = () => {
@@ -33,16 +33,12 @@ const useSocket = () => {
       socketRef.current.connect();
     });
 
-    socketRef.current.on("CU_task", async (task, client_id) => {
-      const isAlready = await db.tasks
-        .where("_hash")
-        .equals(task._hash)
-        .toArray();
-      if (isAlready.length === 0 && clientId !== client_id) {
-        task._id = task._uid;
-        delete task._uid;
-        addTaskSocket(task);
-      }
+    socketRef.current.on("CU_task", async (task) => {
+      console.log(task);
+      task._id = task._uid;
+      delete task._uid;
+
+      db.tasks.put(task);
     });
 
     socketRef.current.on("D_task", async (deleteId, client_id) => {

@@ -1,25 +1,23 @@
-// import axios from "axios";
-// import db from "../db/db";
+import axios from "axios";
+import db from "../db/db";
 
-export const sync = (/* syncTable, network, clientId */) => {
-  return 0;
-
-  // if (syncTable && network) {
-  //   if (syncTable.length !== 0) {
-  //     axios
-  //       .post(`${process.env.API_URI}`, {
-  //         error_messages: false,
-  //         datas: syncTable,
-  //         clientId: clientId,
-  //       })
-  //       .then((res) => {
-  //         res.data.sucsess.map((val) => {
-  //           db.sync.delete(val);
-  //         });
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  // }
+export const sync = (syncTable, network, clientId) => {
+  console.log(syncTable);
+  if (syncTable && network) {
+    axios
+      .post(`${process.env.API_URI}`, {
+        error_messages: true,
+        datas: syncTable,
+        clientId: clientId,
+      })
+      .then((res) => {
+        console.log(res);
+        res.data.sucsess.map((val) => {
+          db.sync.delete(val);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 };

@@ -40,7 +40,7 @@ export const update = async (id, title) => {
   content._updatedAt = Date.now();
   content._hash = md5(JSON.stringify(content));
 
-  await db.tasks.update(content._id, content);
+  await db.tasks.put(content);
   syncUpdate(content);
 };
 
@@ -52,7 +52,7 @@ export const complete = async (id) => {
   content._updatedAt = Date.now();
   content._hash = md5(JSON.stringify(content));
 
-  await db.tasks.update(content._id, content);
+  await db.tasks.put(content);
   syncUpdate(content);
 };
 

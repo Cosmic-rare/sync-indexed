@@ -9,8 +9,11 @@ import Status from "./components/status";
 import TrashItem from "./components/TrashItem";
 import CategoryTitle from "./components/CategoryTitle";
 import axios from "axios";
+import useNetwork from "./hooks/useNetwork";
+import { sync } from "./module/syncSurveillance";
 
 const App = () => {
+  const [syncStatus, setSyncStatus] = useState(0);
   const [order, setOrder] = useState("create+");
   const tasks = useLiveQuery(() => {
     const task = db.tasks.orderBy(
@@ -18,15 +21,27 @@ const App = () => {
     );
     return order.slice(-1) === "-" ? task.reverse().toArray() : task.toArray();
   }, [order]);
-  const [, connected, reconnection] = useSocket();
+  const [, connected, reconnection, clientId] = useSocket();
   const syncCount = useLiveQuery(() => db.sync.count());
+  const syncTable = useLiveQuery(() => db.sync.toArray());
+  const network = useNetwork();
 
   useEffect(() => {
     axios.get(`${process.env.API_URI}/pull`).then((res) => {
       db.tasks.clear();
       db.tasks.bulkPut(res.data.tasks);
+      setSyncStatus(1);
+      console.log("pull");
     });
   }, []);
+
+  useEffect(() => {
+    if (syncCount && syncStatus === 1) {
+      sync(syncTable, network, clientId);
+      console.log("push");
+    }
+    console.log(syncTable);
+  }, [syncTable, syncStatus]);
 
   return (
     <div>

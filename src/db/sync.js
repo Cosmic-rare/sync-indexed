@@ -5,7 +5,9 @@ export const syncAdd = (content) => {
   Object.assign(content, {
     type: "create",
     sync_id: uuidv4(),
+    _uid: content._id,
   });
+  delete content._id;
   db.sync.add(content);
 };
 
@@ -13,7 +15,9 @@ export const syncUpdate = (content) => {
   Object.assign(content, {
     type: "update",
     sync_id: uuidv4(),
+    _uid: content._id,
   });
+  delete content._id;
   db.sync.add(content);
 };
 
