@@ -27,7 +27,7 @@ const TaskItem = (props) => {
       </span>
       <span
         onClick={() => {
-          complete(task._id);
+          complete(task.task_id);
         }}
         style={{
           cursor: "pointer",
@@ -50,7 +50,7 @@ const TaskItem = (props) => {
             onKeyDown={(e) => {
               if (e.keyCode === 13) {
                 if (!(title.trim() === "")) {
-                  update(task._id, title);
+                  update(task.task_id, title);
                 }
                 setEditing(false);
               }
@@ -69,7 +69,7 @@ const TaskItem = (props) => {
             style={{ display: "inline" }}
             onClick={() => {
               if (!(title.trim() === "")) {
-                update(task._id, title);
+                update(task.task_id, title);
               }
               setEditing(false);
             }}

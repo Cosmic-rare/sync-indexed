@@ -23,11 +23,16 @@ const App = () => {
   }, [order]);
   const [, connected, reconnection, clientId] = useSocket();
   const syncCount = useLiveQuery(() => db.sync.count());
-  const syncTable = useLiveQuery(() => db.sync.toArray());
+  const notSyncedCount = useLiveQuery(() =>
+    db.sync.where("status").equals(0).count()
+  );
+  const syncTable = useLiveQuery(() =>
+    db.sync.where("status").between(-1, 0, true, true).toArray()
+  );
   const network = useNetwork();
 
   useEffect(() => {
-    axios.get(`${process.env.API_URI}/pull`).then((res) => {
+    axios.get(`${process.env.API_URI}`).then((res) => {
       db.tasks.clear();
       db.tasks.bulkPut(res.data.tasks);
       setSyncStatus(1);
@@ -36,12 +41,12 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    console.log("change!");
     if (syncCount && syncStatus === 1) {
       sync(syncTable, network, clientId);
       console.log("push");
     }
-    console.log(syncTable);
-  }, [syncTable, syncStatus]);
+  }, [syncCount, syncStatus]);
 
   return (
     <div>
@@ -50,7 +55,7 @@ const App = () => {
       <Status
         connected={connected}
         reconnection={reconnection}
-        syncCount={syncCount}
+        syncCount={notSyncedCount}
       />
 
       <CategoryTitle title="Tasks" />

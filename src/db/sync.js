@@ -2,29 +2,13 @@ import db from "./db";
 import { v4 as uuidv4 } from "uuid";
 
 export const syncAdd = (content) => {
-  Object.assign(content, {
-    type: "create",
-    sync_id: uuidv4(),
-    _uid: content._id,
-  });
-  delete content._id;
-  db.sync.add(content);
+  db.sync.add({ type: "create", sync_id: uuidv4(), status: 0, task: content });
 };
 
 export const syncUpdate = (content) => {
-  Object.assign(content, {
-    type: "update",
-    sync_id: uuidv4(),
-    _uid: content._id,
-  });
-  delete content._id;
-  db.sync.add(content);
+  db.sync.add({ type: "update", sync_id: uuidv4(), status: 0, task: content });
 };
 
 export const syncDelete = (content) => {
-  Object.assign(content, {
-    type: "delete",
-    sync_id: uuidv4(),
-  });
-  db.sync.add(content);
+  db.sync.add({ type: "delete", sync_id: uuidv4(), status: 0, task: content });
 };

@@ -14,7 +14,7 @@ export const delTaskSocket = (id) => {
 export const create = (title) => {
   if (!(title.trim() === "")) {
     const content = {
-      _id: uuidv4(),
+      task_id: uuidv4(),
       _rev: 0,
       _deleted: false,
       title: title,
@@ -32,8 +32,8 @@ export const create = (title) => {
   }
 };
 
-export const update = async (id, title) => {
-  const content = await db.tasks.get(id);
+export const update = async (task_id, title) => {
+  const content = await db.tasks.get(task_id);
 
   content.title = title;
   content._rev++;
@@ -44,8 +44,10 @@ export const update = async (id, title) => {
   syncUpdate(content);
 };
 
-export const complete = async (id) => {
-  const content = await db.tasks.get(id);
+export const complete = async (task_id) => {
+  const content = await db.tasks.get(task_id);
+
+  console.log(task_id);
 
   content.done = !content.done;
   content._rev++;
@@ -59,34 +61,34 @@ export const complete = async (id) => {
 export const del = async (task) => {
   if (task._deleted) return;
 
-  const content = await db.tasks.get(task._id);
+  const content = await db.tasks.get(task.task_id);
 
   content._deleted = true;
   content._rev++;
   content._updatedAt = Date.now();
   content._hash = md5(JSON.stringify(content));
 
-  db.tasks.update(content._id, content);
+  await db.tasks.put(content);
   syncUpdate(content);
 };
 
 export const restore = async (task) => {
   if (!task._deleted) return;
 
-  const content = await db.tasks.get(task._id);
+  const content = await db.tasks.get(task.task_id);
 
   content._deleted = false;
   content._rev++;
   content._updatedAt = Date.now();
   content._hash = md5(JSON.stringify(content));
 
-  db.tasks.update(content._id, content);
+  await db.tasks.put(content);
   syncUpdate(content);
 };
 
 export const cleanTrash = async (task) => {
   if (!task._deleted) return;
 
-  db.tasks.delete(task._id);
+  db.tasks.delete(task.task_id);
   syncDelete(task);
 };

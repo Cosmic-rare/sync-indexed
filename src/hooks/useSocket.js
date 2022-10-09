@@ -34,10 +34,6 @@ const useSocket = () => {
     });
 
     socketRef.current.on("CU_task", async (task) => {
-      console.log(task);
-      task._id = task._uid;
-      delete task._uid;
-
       db.tasks.put(task);
     });
 
