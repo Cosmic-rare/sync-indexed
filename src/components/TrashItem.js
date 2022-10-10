@@ -1,5 +1,5 @@
 import React from "react";
-import { cleanTrash, u } from "../db/task";
+import { cleanTrash, update } from "../db/task";
 
 const TrashItem = (props) => {
   const { task } = props;
@@ -16,7 +16,7 @@ const TrashItem = (props) => {
       </span>
       <span
         style={{ cursor: "pointer" }}
-        onClick={() => u(task, "_deleted", false)}
+        onClick={() => update(task, "_deleted", false)}
       >
         {"🔙"}{" "}
       </span>

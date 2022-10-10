@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { u, complete } from "../db/task";
+import { update } from "../db/task";
 
 const TaskItem = (props) => {
   const { task } = props;
@@ -15,7 +15,7 @@ const TaskItem = (props) => {
     <li>
       <span
         style={{ marginRight: 6, cursor: "pointer" }}
-        onClick={() => u(task, "_deleted", true)}
+        onClick={() => update(task, "_deleted", true)}
       >
         {"🗑️"}
       </span>
@@ -27,7 +27,7 @@ const TaskItem = (props) => {
       </span>
       <span
         onClick={() => {
-          complete(task.task_id);
+          update(task, "done", !task.done);
         }}
         style={{
           cursor: "pointer",
@@ -50,7 +50,7 @@ const TaskItem = (props) => {
             onKeyDown={(e) => {
               if (e.keyCode === 13) {
                 if (!(title.trim() === "")) {
-                  u(task, "title", title);
+                  update(task, "title", title);
                 }
                 setEditing(false);
               }
@@ -69,7 +69,7 @@ const TaskItem = (props) => {
             style={{ display: "inline" }}
             onClick={() => {
               if (!(title.trim() === "")) {
-                u(task, "title", title);
+                update(task, "title", title);
               }
               setEditing(false);
             }}

@@ -32,7 +32,7 @@ export const create = (title) => {
   }
 };
 
-export const u = async (task, key, value) => {
+export const update = async (task, key, value) => {
   const content = await db.tasks.get(task.task_id);
 
   content[key] = value;
@@ -42,12 +42,6 @@ export const u = async (task, key, value) => {
 
   await db.tasks.put(content);
   syncTable("update", content);
-};
-
-export const complete = async (task_id) => {
-  const content = await db.tasks.get(task_id);
-
-  u({ task_id: task_id }, "done", !content.done);
 };
 
 export const cleanTrash = async (task) => {
