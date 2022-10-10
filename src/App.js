@@ -8,6 +8,7 @@ import Order from "./components/Order";
 import Status from "./components/status";
 import TrashItem from "./components/TrashItem";
 import CategoryTitle from "./components/CategoryTitle";
+import CleanSyncTable from "./components/CleanSyncTable";
 import axios from "axios";
 import useNetwork from "./hooks/useNetwork";
 import { sync } from "./module/syncSurveillance";
@@ -57,6 +58,7 @@ const App = () => {
         reconnection={reconnection}
         syncCount={notSyncedCount}
       />
+      <CleanSyncTable />
 
       <CategoryTitle title="Tasks" />
       <ul style={{ listStyle: "none" }}>
