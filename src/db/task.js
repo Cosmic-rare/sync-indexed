@@ -1,7 +1,7 @@
 import db from "./db";
 import { v4 as uuidv4 } from "uuid";
 import md5 from "md5";
-import { syncAdd, syncDelete, syncUpdate } from "./sync";
+import { syncTable } from "./sync";
 
 export const addTaskSocket = async (task) => {
   db.tasks.put(task);
@@ -28,67 +28,31 @@ export const create = (title) => {
     Object.assign(content, hash);
 
     db.tasks.add(content);
-    syncAdd(content);
+    syncTable("create", content);
   }
 };
 
-export const update = async (task_id, title) => {
-  const content = await db.tasks.get(task_id);
+export const u = async (task, key, value) => {
+  const content = await db.tasks.get(task.task_id);
 
-  content.title = title;
+  content[key] = value;
   content._rev++;
   content._updatedAt = Date.now();
   content._hash = md5(JSON.stringify(content));
 
   await db.tasks.put(content);
-  syncUpdate(content);
+  syncTable("update", content);
 };
 
 export const complete = async (task_id) => {
   const content = await db.tasks.get(task_id);
 
-  console.log(task_id);
-
-  content.done = !content.done;
-  content._rev++;
-  content._updatedAt = Date.now();
-  content._hash = md5(JSON.stringify(content));
-
-  await db.tasks.put(content);
-  syncUpdate(content);
-};
-
-export const del = async (task) => {
-  if (task._deleted) return;
-
-  const content = await db.tasks.get(task.task_id);
-
-  content._deleted = true;
-  content._rev++;
-  content._updatedAt = Date.now();
-  content._hash = md5(JSON.stringify(content));
-
-  await db.tasks.put(content);
-  syncUpdate(content);
-};
-
-export const restore = async (task) => {
-  if (!task._deleted) return;
-
-  const content = await db.tasks.get(task.task_id);
-
-  content._deleted = false;
-  content._rev++;
-  content._updatedAt = Date.now();
-  content._hash = md5(JSON.stringify(content));
-
-  await db.tasks.put(content);
-  syncUpdate(content);
+  u({ task_id: task_id }, "done", !content.done);
 };
 
 export const cleanTrash = async (task) => {
   if (!task._deleted) return;
 
   db.tasks.delete(task.task_id);
-  syncDelete(task);
+  syncTable("delete", task);
 };
