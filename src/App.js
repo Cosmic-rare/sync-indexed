@@ -22,13 +22,10 @@ const App = () => {
     );
     return order.slice(-1) === "-" ? task.reverse().toArray() : task.toArray();
   }, [order]);
-  const [, connected, reconnection, clientId] = useSocket();
+  const [, connected, reconnection] = useSocket();
   const syncCount = useLiveQuery(() => db.sync.count());
   const notSyncedCount = useLiveQuery(() =>
     db.sync.where("status").equals(0).count()
-  );
-  const syncTable = useLiveQuery(() =>
-    db.sync.where("status").between(-1, 0, true, true).toArray()
   );
   const network = useNetwork();
 
@@ -37,16 +34,19 @@ const App = () => {
       db.tasks.clear();
       db.tasks.bulkPut(res.data.tasks);
       setSyncStatus(1);
-      console.log("pull");
     });
   }, []);
 
   useEffect(() => {
-    console.log("change!");
     if (syncCount && syncStatus === 1) {
-      sync(syncTable, network, clientId);
-      console.log("push");
+      sync(network);
     }
+  }, [syncCount, syncStatus]);
+
+  useEffect(() => {
+    console.log(
+      `useEffect [syncCount(${syncCount}), syncStatus(${syncStatus})]`
+    );
   }, [syncCount, syncStatus]);
 
   return (

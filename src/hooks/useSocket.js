@@ -9,7 +9,6 @@ const useSocket = () => {
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
   const [reconnection, setReconnection] = useState(false);
-  const [clientId, setClientId] = useState("");
   const network = useNetwork();
 
   useEffect(() => {
@@ -22,7 +21,6 @@ const useSocket = () => {
 
     socketRef.current.on("connect", async () => {
       setConnected(true);
-      setClientId(socketRef.current.id);
     });
 
     socketRef.current.on("disconnect", () => {
@@ -34,13 +32,14 @@ const useSocket = () => {
     });
 
     socketRef.current.on("CU_task", async (task) => {
-      db.tasks.put(task);
+      const latestTask = await db.tasks.get(task.task_id);
+      if (!(latestTask._rev === task._rev && latestTask._hash === task._hash)) {
+        db.tasks.put(task);
+      }
     });
 
-    socketRef.current.on("D_task", async (deleteId, client_id) => {
-      if (clientId !== client_id) {
-        delTaskSocket(deleteId);
-      }
+    socketRef.current.on("D_task", async (deleteId) => {
+      delTaskSocket(deleteId);
     });
 
     return () => {
@@ -53,7 +52,7 @@ const useSocket = () => {
     setReconnection(managerRef.current.reconnection());
   }, [network]);
 
-  return [socketRef, connected, reconnection, clientId];
+  return [socketRef, connected, reconnection];
 };
 
 export default useSocket;
