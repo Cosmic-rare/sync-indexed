@@ -29,13 +29,18 @@ const App = () => {
   );
   const network = useNetwork();
 
-  useEffect(() => {
-    axios.get(`${process.env.API_URI}`).then((res) => {
-      db.tasks.clear();
-      db.tasks.bulkPut(res.data.tasks);
-      setSyncStatus(1);
-    });
-  }, []);
+  useEffect(
+    () => {
+      axios.get(`${process.env.API_URI}`).then((res) => {
+        db.tasks.clear();
+        db.tasks.bulkPut(res.data.tasks);
+        setSyncStatus(1);
+      });
+    },
+    [
+      /* 読み込み時ではなく、networkがtrueになったとき */
+    ]
+  );
 
   useEffect(() => {
     if (syncCount && syncStatus === 1) {
@@ -58,6 +63,8 @@ const App = () => {
         reconnection={reconnection}
         syncCount={notSyncedCount}
       />
+      {/* 同期テーブルをstatusごとに数を表示 */}
+
       <CleanSyncTable />
 
       <CategoryTitle title="Tasks" />

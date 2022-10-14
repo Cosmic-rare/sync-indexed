@@ -5,6 +5,8 @@ const Status = (props) => {
   const { connected, reconnection, syncCount } = props;
   const network = useNetwork();
 
+  // 表示を厳選する
+
   return (
     <div
       style={{
