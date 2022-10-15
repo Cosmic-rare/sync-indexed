@@ -33,6 +33,7 @@ const useSocket = () => {
 
     socketRef.current.on("CU_task", async (task) => {
       // 送られてきたデータが古かったときの処理
+      // 同じのが送られてきたときの処理
       // ../db/task.js に処理をまとめる
       const latestTask = await db.tasks.get(task.task_id);
       if (!(latestTask._rev === task._rev && latestTask._hash === task._hash)) {

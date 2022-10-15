@@ -15,6 +15,7 @@ const push = (syncTable) => {
           console.log(`pushed ${res.data.sync_id}`);
           db.sync.update(res.data.sync_id, { ...val, status: 1 });
         });
+      // 失敗したときにstatusを変更する(-2とか?)
     });
 
     resolve();
